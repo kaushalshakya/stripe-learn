@@ -14,6 +14,10 @@ const stripeWebhook = async (req, res) => {
       console.log("Payment intent created");
     }
 
+    if (event.type === "payment_intent.succeeded") {
+      console.log("Payment intent succeeded");
+    }
+
     return res.json({ event });
   } catch (err) {
     console.log(err);

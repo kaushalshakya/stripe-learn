@@ -3,12 +3,13 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { PaymentElement } from "@stripe/react-stripe-js";
+import Checkout from "./Checkout";
 
 const Products = () => {
   const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
   const [clientSecret, setClientSecret] = useState(null);
   const [amount, setAmount] = useState(null);
+  const [intent, setIntent] = useState(null);
 
   const { error, isLoading, data } = useQuery({
     queryKey: ["getProducts"],
@@ -31,6 +32,7 @@ const Products = () => {
       console.log(data);
       setClientSecret(data.clientSecret);
       setAmount(data.amount);
+      setIntent(data.payment_intent);
     },
     onError: (err) => {
       console.log(err);
@@ -68,13 +70,7 @@ const Products = () => {
         ))}
         {clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <PaymentElement />
-            <button
-              type="button"
-              className="rounded-sm bg-black text-white px-5"
-            >
-              Pay ${amount / 100}
-            </button>
+            <Checkout intent={intent} amount={amount} />
           </Elements>
         )}
       </div>

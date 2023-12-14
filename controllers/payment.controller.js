@@ -17,7 +17,13 @@ exports.payment = async (req, res) => {
       payment_method_types: ["card"],
     });
 
-    return res.status(200).json({ clientSecret: intent.client_secret, amount });
+    return res
+      .status(200)
+      .json({
+        payment_intent: intent.id,
+        clientSecret: intent.client_secret,
+        amount,
+      });
   } catch (err) {
     console.log(err);
   }
