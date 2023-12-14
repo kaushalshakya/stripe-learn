@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
   },
+  stripe_customer_id: {
+    type: String,
+  },
 });
 
 const Users = mongoose.model("User", userSchema);
