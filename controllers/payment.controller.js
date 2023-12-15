@@ -13,17 +13,15 @@ exports.payment = async (req, res) => {
     const intent = await stripe.paymentIntents.create({
       amount,
       currency: "USD",
-      customer: "cus_PApgcEpT85agih",
+      customer: "cus_PB6Ipc4bP371zG",
       payment_method_types: ["card"],
     });
 
-    return res
-      .status(200)
-      .json({
-        payment_intent: intent.id,
-        clientSecret: intent.client_secret,
-        amount,
-      });
+    return res.status(200).json({
+      payment_intent: intent.id,
+      clientSecret: intent.client_secret,
+      amount,
+    });
   } catch (err) {
     console.log(err);
   }
@@ -67,28 +65,5 @@ exports.listInvoices = async (req, res) => {
     return res.status(200).json({ invoices });
   } catch (err) {
     console.log(err);
-  }
-};
-
-exports.webhook = async (req, res) => {
-  try {
-    const payload = req.body.toString();
-
-    console.log(payload);
-
-    const sig = req.headers["stripe-signature"];
-    const endpointSecret = process.env.WEBHOOK_SECRET;
-
-    const event = await stripe.webhooks.constructEvent(
-      payload,
-      sig,
-      endpointSecret
-    );
-
-    console.log(event);
-
-    return res.json({ event });
-  } catch (err) {
-    console.log(err.message);
   }
 };

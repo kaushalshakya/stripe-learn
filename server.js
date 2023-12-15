@@ -5,11 +5,13 @@ const {
   userRoutes,
   productRoutes,
   paymentRoutes,
+  planRoutes,
 } = require("./routes/index.routes");
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 const cors = require("cors");
 const stripeWebhook = require("./controllers/stripe.controller");
+const errorHandler = require("./middlewares/error.middleware");
 
 app.use(cors());
 
@@ -33,6 +35,9 @@ app.get("/", async (req, res) => {
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/plans", planRoutes);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server >>> http://localhost:${PORT}`);
