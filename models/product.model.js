@@ -9,6 +9,9 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  stripe_product_id: {
+    type: String,
+  },
 });
 
 const Products = mongoose.model("Product", productSchema);
