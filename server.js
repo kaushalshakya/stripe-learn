@@ -6,6 +6,8 @@ const {
   productRoutes,
   paymentRoutes,
   planRoutes,
+  subscriptionRoutes,
+  pricingRoutes,
 } = require("./routes/index.routes");
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
@@ -36,6 +38,8 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/plans", planRoutes);
+app.use("/api/v1/subscriptions", subscriptionRoutes);
+app.use("/api/v1/pricing", pricingRoutes);
 
 app.use(errorHandler);
 

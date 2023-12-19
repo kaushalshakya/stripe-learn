@@ -26,6 +26,10 @@ const stripeWebhook = async (req, res) => {
       console.log(`Product ${event.data.object.id} created`);
     }
 
+    if (event.type) {
+      console.log(`${event.type} triggered`);
+    }
+
     return res.json({ event });
   } catch (err) {
     console.log(err);

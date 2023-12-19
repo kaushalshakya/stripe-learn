@@ -1,3 +1,4 @@
+const catchAsync = require("../helper/catchAsync.helper");
 const Products = require("../models/product.model");
 const Users = require("../models/user.model");
 require("dotenv").config();
@@ -67,3 +68,10 @@ exports.listInvoices = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.paymentMethods = catchAsync(async (req, res, next) => {
+  const paymentMethod = await stripe.paymentMethods.list({
+    type: "card",
+  });
+  return res.status(200).json(paymentMethod);
+});

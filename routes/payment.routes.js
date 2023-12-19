@@ -5,5 +5,6 @@ router.post("/", paymentController.payment);
 router.post("/intent", paymentController.confirmPayment);
 router.get("/", paymentController.getPayments);
 router.get("/invoices", paymentController.listInvoices);
+router.get("/method", paymentController.paymentMethods);
 
 module.exports = router;
