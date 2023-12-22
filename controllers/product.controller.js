@@ -10,9 +10,23 @@ exports.addProduct = async (req, res) => {
         unit_amount: req.body.product_price * 100,
       },
     });
+
+    console.log(stripeProduct);
+
+    const stripePricing = await stripe.prices.create({
+      currency: "usd",
+      product: stripeProduct.id,
+      unit_amount: req.body.product_price * 100,
+      recurring: {
+        interval: "month",
+      },
+    });
+
+    console.log(stripePricing);
+
     const product = await Products.create({
       ...req.body,
-      stripe_product_id: stripeProduct.id,
+      stripe_product_id: stripePricing.id,
     });
     return res.status(200).json({ product, stripeProduct });
   } catch (err) {

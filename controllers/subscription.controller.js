@@ -4,26 +4,26 @@ const Error = require("../helper/error.helper");
 const stripe = require("../configs/stripe.config");
 
 exports.createSubscription = catchAsync(async (req, res, next) => {
-  const { token } = req.body;
-
   const customer = await stripe.customers.create({
-    source: token,
-    email: "kshakya101@gmail.com",
+    // source: token,
+    email: "suzata_bazra@gmail.com",
+    name: "Sujata Bajracharya",
     payment_method: "pm_card_visa",
     invoice_settings: {
       default_payment_method: "pm_card_visa",
     },
   });
 
-  console.log(customer);
-
   const newSubscription = await stripe.subscriptions.create({
     customer: customer.id,
     items: [
       {
-        price: "price_1OOdBFIvMqLok6Sny6aTZdUS",
+        price: req.body.stripe_plan_id,
       },
     ],
+    payment_behavior: "default_incomplete",
+    payment_settings: { save_default_payment_method: "on_subscription" },
+    expand: ["latest_invoice.payment_intent"],
   });
 
   if (!newSubscription) {
@@ -35,13 +35,15 @@ exports.createSubscription = catchAsync(async (req, res, next) => {
     stripe_subscription_id: newSubscription.id,
   });
 
-  return res.status(200).json({ data, newSubscription });
+  return res.status(200).json({
+    subscription: newSubscription.id,
+    clientSecret: newSubscription.latest_invoice.payment_intent.client_secret,
+    data,
+  });
 });
 
 exports.listSubscription = catchAsync(async (req, res, next) => {
-  const subscriptions = await stripe.subscriptions.list({
-    type: "card",
-  });
+  const subscriptions = await stripe.subscriptions.list();
 
   return res.status(200).json(subscriptions);
 });

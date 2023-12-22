@@ -1,30 +1,14 @@
 import React from "react";
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import {
+  useStripe,
+  useElements,
+  CardElement,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
 
-const Checkout = ({ intent, amount }) => {
+const Checkout = ({ return_url }) => {
   const elements = useElements();
   const stripe = useStripe();
-
-  const createSubscriptionMutation = async (token) => {
-    const response = await axios.post(
-      "http://localhost:8080/api/v1/subscriptions",
-      token
-    );
-    return response.data;
-  };
-
-  const mutation = useMutation({
-    mutationFn: createSubscriptionMutation,
-    onSuccess: (data) => {
-      console.log(data);
-      alert("Subscription successful");
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
 
   const handlePayment = async () => {
     if (!elements || !stripe) {
@@ -45,32 +29,33 @@ const Checkout = ({ intent, amount }) => {
     //   console.log("Payment method created succeeded");
     // }
 
-    // const result = await stripe.confirmPayment({
-    //   elements,
-    //   confirmParams: {
-    //     return_url: "http://localhost:5173",
-    //   },
-    // });
+    const result = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `http://localhost:5173/${return_url}`,
+      },
+    });
 
-    // if (result.error) {
-    //   console.log(result.error.message);
-    // } else {
-    //   console.log("Payment created succeeded");
-    // }
-
-    const cardElement = elements.getElement(CardElement);
-
-    const { token, error } = await stripe.createToken(cardElement);
-
-    if (error) {
-      console.log(error.message);
+    if (result.error) {
+      console.log(result.error.message);
+    } else {
+      console.log("Payment created succeeded");
     }
 
-    mutation.mutate(token);
+    // const cardElement = elements.getElement(CardElement);
+
+    // const { token, error } = await stripe.createToken(cardElement);
+
+    // if (error) {
+    //   console.log(error.message);
+    // }
+
+    // mutation.mutate(token);
   };
   return (
     <div className="flex flex-col gap-5 items-center">
-      <CardElement className="bg-white text-black rounded-md w-[15rem]" />
+      {/* <CardElement className="bg-white text-black rounded-md w-[15rem]" /> */}
+      <PaymentElement />
       <button
         type="button"
         className="rounded-sm bg-black text-white px-5"

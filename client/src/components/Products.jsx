@@ -70,7 +70,7 @@ const Products = () => {
         ))}
         {clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <Checkout intent={intent} amount={amount} />
+            <Checkout />
           </Elements>
         )}
       </div>

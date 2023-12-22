@@ -15,7 +15,7 @@ exports.payment = async (req, res) => {
       amount,
       currency: "USD",
       customer: "cus_PB6Ipc4bP371zG",
-      payment_method_types: ["card"],
+      automatic_payment_methods: { enabled: true },
     });
 
     return res.status(200).json({

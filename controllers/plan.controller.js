@@ -31,3 +31,9 @@ exports.createPlan = catchAsync(async (req, res, next) => {
     createPlan,
   });
 });
+
+exports.plans = catchAsync(async (req, res, next) => {
+  const plans = await Plans.find();
+
+  return res.status(200).json(plans);
+});

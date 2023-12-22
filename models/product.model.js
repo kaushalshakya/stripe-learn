@@ -12,6 +12,9 @@ const productSchema = new mongoose.Schema({
   stripe_product_id: {
     type: String,
   },
+  stripe_pricing_id: {
+    type: String,
+  },
 });
 
 const Products = mongoose.model("Product", productSchema);
