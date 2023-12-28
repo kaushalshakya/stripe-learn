@@ -6,8 +6,8 @@ const stripe = require("../configs/stripe.config");
 exports.createSubscription = catchAsync(async (req, res, next) => {
   const customer = await stripe.customers.create({
     // source: token,
-    email: "suzata_bazra@gmail.com",
-    name: "Sujata Bajracharya",
+    email: "kaushal.shakya01@gmail.com",
+    name: "Kaushal Shakya",
     payment_method: "pm_card_visa",
     invoice_settings: {
       default_payment_method: "pm_card_visa",
@@ -40,6 +40,21 @@ exports.createSubscription = catchAsync(async (req, res, next) => {
     clientSecret: newSubscription.latest_invoice.payment_intent.client_secret,
     data,
   });
+});
+
+exports.cancelSubscription = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const cancelledSubscription = await stripe.subscriptions.cancel(id);
+
+  const subData = await Subscription.findOneAndUpdate(
+    {
+      stripe_subscription_id: id,
+    },
+    { status: "Cancelled" }
+  );
+
+  return res.status(200).json({ cancelledSubscription, subData });
 });
 
 exports.listSubscription = catchAsync(async (req, res, next) => {

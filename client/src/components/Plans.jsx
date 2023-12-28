@@ -68,7 +68,7 @@ const Plans = () => {
       ))}
       {clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <Checkout return_url={"plans"} />
+          <Checkout return_url={"/"} />
         </Elements>
       )}
     </div>
